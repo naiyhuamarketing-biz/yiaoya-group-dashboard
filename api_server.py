@@ -688,6 +688,12 @@ def daily_text(target: Optional[str] = Query(None)):
         raise HTTPException(502, f"Failed to build report: {e}")
 
 
+# ── Static assets (brand logos under /assets/) ─────────────
+ASSETS_DIR = ROOT / "assets"
+if ASSETS_DIR.exists():
+    app.mount("/assets", StaticFiles(directory=str(ASSETS_DIR)), name="assets")
+
+
 # ── Dashboard routes (HTML at same origin as API) ─────────────
 @app.get("/")
 def root_dashboard():

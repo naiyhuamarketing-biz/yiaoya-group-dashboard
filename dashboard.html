@@ -62,13 +62,13 @@
       linear-gradient(165deg, #F5F2E7 0%, #ECEBDD 50%, #DCEEDF 100%);
   }
   .metal {
-    background: linear-gradient(135deg, #2D6A4F 0%, #B7D5BC 20%, #1B3A2F 35%, #74A57F 50%, #1B3A2F 65%, #B8945F 80%, #2D6A4F 100%);
+    background: linear-gradient(135deg, var(--rg-deep) 0%, var(--rg-pale) 20%, var(--rg-deepest) 35%, var(--rg-light) 50%, var(--rg-deepest) 65%, var(--gold) 80%, var(--rg-deep) 100%);
     background-size: 200% 200%;
     -webkit-background-clip: text; background-clip: text; color: transparent;
     animation: shimmer 8s ease infinite;
   }
   @keyframes shimmer { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
-  .metal-bg { background: linear-gradient(135deg, #2D6A4F 0%, #4A8765 30%, #1B3A2F 50%, #74A57F 70%, #2D6A4F 100%); }
+  .metal-bg { background: linear-gradient(135deg, var(--rg-deep) 0%, var(--rg-mid) 30%, var(--rg-deepest) 50%, var(--rg-light) 70%, var(--rg-deep) 100%); }
   .metal-line { height: 1px; background: linear-gradient(90deg, transparent 0%, var(--rg-mid) 50%, transparent 100%); border: 0; }
   .card {
     background: var(--ivory); border: 1px solid var(--line); border-radius: 22px;
@@ -138,8 +138,8 @@
   .btn-primary:hover { background: var(--rg-deepest); border-color: var(--rg-deepest); transform: translateY(-1px); box-shadow: 0 8px 20px -6px rgba(27,58,47,.45); }
   .btn-ghost { background: transparent; border: 1px solid var(--line); color: var(--rg-deep); }
   .btn-ghost:hover { background: var(--cream); border-color: var(--rg-light); color: var(--rg-deepest); }
-  .btn-metal { background: linear-gradient(135deg, #B8848B 0%, #D4A8A8 50%, #9C5F66 100%); color: white; border: none; }
-  .btn-metal:hover { background: linear-gradient(135deg, #2D6A4F, #4A8765 50%, #1B3A2F); transform: translateY(-1px); box-shadow: 0 10px 25px -8px rgba(27,58,47,.55); }
+  .btn-metal { background: linear-gradient(135deg, var(--rg-deep) 0%, var(--rg-mid) 50%, var(--rg-deepest) 100%); color: white; border: none; }
+  .btn-metal:hover { background: linear-gradient(135deg, var(--rg-deepest) 0%, var(--rg-deep) 50%, var(--rg-deepest) 100%); transform: translateY(-1px); box-shadow: 0 10px 25px -8px var(--rg-deepest); }
   .btn-sm { padding: 7px 14px; font-size: 12px; }
   .btn-active { background: var(--rg-deep); color: var(--ivory); border-color: var(--rg-deep); }
 
@@ -1144,28 +1144,28 @@ const BRAND_IDENTITY = {
     sub:  'yiaoya & altmedical · group',
     mono: 'A',
     topbarThai: 'altmedical', topbarEn: 'corporate',
-    logo: null,                                                                  // wordmark fallback for now
+    logo: '/assets/logos/altmedical.png',
   },
   yiaoya: {
     hero: 'เยียวยา',     heroFont: 'font-thai-serif',
     sub:  'yiaoya · clinic',
     mono: 'Y',
     topbarThai: 'เยียวยา', topbarEn: 'yiaoya',
-    logo: 'https://graph.facebook.com/yiaoya/picture?type=large&width=512&height=512',
+    logo: '/assets/logos/yiaoya.png',
   },
   resto: {
     hero: 'RESTO',       heroFont: 'font-display uppercase',
     sub:  'pilates studio · by yiaoya',
     mono: 'R',
     topbarThai: 'RESTO', topbarEn: 'pilates',
-    logo: 'https://graph.facebook.com/restopilates/picture?type=large&width=512&height=512',
+    logo: '/assets/logos/resto.png',
   },
   kneecare: {
     hero: 'KneeCare',    heroFont: 'font-display',
     sub:  'by yiaoya · songkran care',
     mono: 'K',
     topbarThai: 'KneeCare', topbarEn: 'by yiaoya',
-    logo: 'https://graph.facebook.com/61564826919777/picture?type=large&width=512&height=512',
+    logo: '/assets/logos/kneecare.png',
   },
 };
 
