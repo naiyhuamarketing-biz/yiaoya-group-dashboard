@@ -474,7 +474,7 @@
 <section class="brand-bar no-print" id="brandBar">
   <div class="max-w-[1400px] mx-auto px-8 py-4 flex items-center justify-between gap-4 flex-wrap">
     <div class="flex items-center gap-2 flex-wrap" id="brandTabs">
-      <button class="brand-tab active" data-brand="all"      onclick="selectBrand('all')">ทั้งหมด</button>
+      <button class="brand-tab active" data-brand="all"      onclick="selectBrand('all')">altmedical</button>
       <button class="brand-tab"        data-brand="yiaoya"   onclick="selectBrand('yiaoya')">เยียวยา</button>
       <button class="brand-tab"        data-brand="resto"    onclick="selectBrand('resto')">RESTO Pilates</button>
       <button class="brand-tab"        data-brand="kneecare" onclick="selectBrand('kneecare')">KneeCare</button>
@@ -482,7 +482,7 @@
     <div class="flex items-center gap-2">
       <span class="stamp" style="font-size:10px">ผู้ยิง</span>
       <div class="op-filter" id="opFilter">
-        <button class="op-pill active" data-op="all"  onclick="selectOperator('all')">ทุกคน</button>
+        <button class="op-pill active" data-op="all"  onclick="selectOperator('all')">ภาพรวมทั้งหมด</button>
         <button class="op-pill"        data-op="fa"   onclick="selectOperator('fa')">ฟา</button>
         <button class="op-pill"        data-op="chun" onclick="selectOperator('chun')">ชุน</button>
       </div>
@@ -1093,24 +1093,72 @@ function setLive(prefix, on) {
 }
 
 // ============= BRAND + OPERATOR FILTERS =============
-const BRAND_ACCENTS = {
-  all:      { accent: '#2D6A4F', soft: '#B7D5BC' },  // Yiaoya green (parent default)
-  yiaoya:   { accent: '#2D6A4F', soft: '#B7D5BC' },  // forest green (parent)
-  resto:    { accent: '#2A2A2A', soft: '#D8D5CC' },  // charcoal/cream
-  kneecare: { accent: '#3E8FB8', soft: '#BFE0F2' },  // sky blue
+// Full per-brand theme — swaps the whole CSS palette when a tab is clicked,
+// so the dashboard takes on each brand's CI (corporate identity).
+const BRAND_THEMES = {
+  // altmedical (parent — บริษัท เยียวยา และออลท์เมดิคอล จำกัด): navy + teal
+  all: {
+    deepest: '#0F2747', deep: '#1B3A5F', mid: '#2A5680',
+    light:   '#5B89B0', pale: '#B5D1E6', mist: '#E1ECF5',
+    soft:    '#3E5878', line: '#C8D6E2', lineSoft: '#E2EAF1',
+    accent:  '#1ABFB1',                               // teal accent from logo
+    bg1:     '#F4F6F8', bg2: '#E5EAF0', bg3: '#D8E2EC',
+  },
+  // เยียวยา: forest green (กายภาพบำบัด)
+  yiaoya: {
+    deepest: '#1B3A2F', deep: '#2D6A4F', mid: '#4A8765',
+    light:   '#74A57F', pale: '#B7D5BC', mist: '#DCEEDF',
+    soft:    '#4A6E5A', line: '#D4DDD0', lineSoft: '#E6ECE2',
+    accent:  '#B8945F',
+    bg1:     '#F5F2E7', bg2: '#ECEBDD', bg3: '#DCEEDF',
+  },
+  // RESTO Pilates: black + cream (minimal luxe)
+  resto: {
+    deepest: '#0A0A0A', deep: '#1A1A1A', mid: '#3A3A3A',
+    light:   '#7A7A7A', pale: '#C8C5BC', mist: '#EBE8DF',
+    soft:    '#5A5A50', line: '#D8D4C8', lineSoft: '#EAE6DA',
+    accent:  '#8A7A5C',
+    bg1:     '#F4F1E8', bg2: '#EAE6DA', bg3: '#DDD9CC',
+  },
+  // KneeCare: sky blue + sand (Songkran vibe)
+  kneecare: {
+    deepest: '#1A4D6E', deep: '#3E8FB8', mid: '#5BA3C9',
+    light:   '#8FC1DC', pale: '#BFE0F2', mist: '#E5F3FA',
+    soft:    '#4A7A95', line: '#C8DCEA', lineSoft: '#E0EDF6',
+    accent:  '#F4D03F',                               // sand yellow accent
+    bg1:     '#EAF4FB', bg2: '#D8EAF5', bg3: '#C5DFEF',
+  },
 };
+
+function applyBrandTheme(brand) {
+  const t = BRAND_THEMES[brand] || BRAND_THEMES.all;
+  const r = document.documentElement.style;
+  r.setProperty('--rg-deepest', t.deepest);
+  r.setProperty('--rg-deep',    t.deep);
+  r.setProperty('--rg-mid',     t.mid);
+  r.setProperty('--rg-light',   t.light);
+  r.setProperty('--rg-pale',    t.pale);
+  r.setProperty('--rg-mist',    t.mist);
+  r.setProperty('--soft',       t.soft);
+  r.setProperty('--line',       t.line);
+  r.setProperty('--line-soft',  t.lineSoft);
+  r.setProperty('--gold',       t.accent);
+  r.setProperty('--brand-accent',      t.deep);
+  r.setProperty('--brand-accent-soft', t.pale);
+  r.setProperty('--blush',   t.bg1);
+  r.setProperty('--blush-2', t.bg2);
+  r.setProperty('--cream',   t.bg1);
+  // body bg gradient — rebuild to match brand
+  document.body.style.background = `linear-gradient(165deg, ${t.bg1} 0%, ${t.bg2} 50%, ${t.bg3} 100%)`;
+}
 
 function selectBrand(brand) {
   state.brand = brand;
   saveState();
-  // Update tab active states
   document.querySelectorAll('.brand-tab').forEach(b => {
     b.classList.toggle('active', b.dataset.brand === brand);
   });
-  // Apply brand accent CSS vars (used by .brand-tab.active and KPI hovers)
-  const a = BRAND_ACCENTS[brand] || BRAND_ACCENTS.all;
-  document.documentElement.style.setProperty('--brand-accent', a.accent);
-  document.documentElement.style.setProperty('--brand-accent-soft', a.soft);
+  applyBrandTheme(brand);
   refetchAllOpenSections();
 }
 
