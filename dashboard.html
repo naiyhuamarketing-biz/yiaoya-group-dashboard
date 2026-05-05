@@ -432,9 +432,9 @@
 <div class="topbar no-print">
   <div class="max-w-[1400px] mx-auto px-8 py-3 flex items-center justify-between gap-4 flex-wrap">
     <div class="flex items-center gap-3">
-      <div class="w-9 h-9 rounded-full metal-bg flex items-center justify-center font-display text-white text-base font-normal">Y</div>
+      <div id="topbarMono" class="w-9 h-9 rounded-full metal-bg flex items-center justify-center font-display text-white text-base font-normal">Y</div>
       <div>
-        <div class="font-thai-serif text-base tracking-[.03em] text-[var(--rg-deepest)]">เยียวยา <span class="font-display lowercase text-[var(--rg-mid)]">· yiaoya</span></div>
+        <div class="font-thai-serif text-base tracking-[.03em] text-[var(--rg-deepest)]"><span id="topbarThai">เยียวยา</span> <span class="font-display lowercase text-[var(--rg-mid)]">· <span id="topbarEn">yiaoya</span></span></div>
         <div class="text-[10px] tracking-widest uppercase text-[var(--soft)]">Group Ads Dashboard · พ.ค. 2569</div>
       </div>
     </div>
@@ -454,10 +454,10 @@
 <section class="relative overflow-hidden">
   <div class="shine-overlay"></div>
   <div class="max-w-[1400px] mx-auto px-8 pt-16 pb-12 text-center relative">
-    <div class="flex justify-center mb-8"><div class="ev-mono">Y</div></div>
+    <div class="flex justify-center mb-8"><div id="heroMono" class="ev-mono">Y</div></div>
     <div class="stamp mb-3">นายหัว กรุ๊ป</div>
-    <h1 class="font-thai-serif text-7xl md:text-8xl font-normal metal tracking-[.01em] leading-none">เยียวยา</h1>
-    <div class="mt-4 text-sm tracking-[.4em] uppercase font-display" style="color:var(--rg-mid); font-weight:400;">yiaoya · group</div>
+    <h1 id="heroWord" class="font-thai-serif text-7xl md:text-8xl font-normal metal tracking-[.01em] leading-none">เยียวยา</h1>
+    <div id="heroSub" class="mt-4 text-sm tracking-[.4em] uppercase font-display" style="color:var(--rg-mid); font-weight:400;">yiaoya · group</div>
     <hr class="metal-line max-w-xs mx-auto mt-7 mb-6" />
     <div class="font-serif text-2xl md:text-3xl" style="color:var(--charcoal)">Group Ads Dashboard</div>
     <div class="mt-2 stamp text-base" style="letter-spacing:.4em">พ.ค. 2569</div>
@@ -1130,6 +1130,34 @@ const BRAND_THEMES = {
   },
 };
 
+// Per-brand text identity (hero word, mono badge letter, topbar title)
+const BRAND_IDENTITY = {
+  all: {
+    hero: 'altmedical',  heroFont: 'font-display lowercase',
+    sub:  'yiaoya & altmedical · group',
+    mono: 'A',
+    topbarThai: 'altmedical', topbarEn: 'corporate',
+  },
+  yiaoya: {
+    hero: 'เยียวยา',     heroFont: 'font-thai-serif',
+    sub:  'yiaoya · clinic',
+    mono: 'Y',
+    topbarThai: 'เยียวยา', topbarEn: 'yiaoya',
+  },
+  resto: {
+    hero: 'RESTO',       heroFont: 'font-display uppercase',
+    sub:  'pilates studio · by yiaoya',
+    mono: 'R',
+    topbarThai: 'RESTO', topbarEn: 'pilates',
+  },
+  kneecare: {
+    hero: 'KneeCare',    heroFont: 'font-display',
+    sub:  'by yiaoya · songkran care',
+    mono: 'K',
+    topbarThai: 'KneeCare', topbarEn: 'by yiaoya',
+  },
+};
+
 function applyBrandTheme(brand) {
   const t = BRAND_THEMES[brand] || BRAND_THEMES.all;
   const r = document.documentElement.style;
@@ -1148,8 +1176,28 @@ function applyBrandTheme(brand) {
   r.setProperty('--blush',   t.bg1);
   r.setProperty('--blush-2', t.bg2);
   r.setProperty('--cream',   t.bg1);
-  // body bg gradient — rebuild to match brand
   document.body.style.background = `linear-gradient(165deg, ${t.bg1} 0%, ${t.bg2} 50%, ${t.bg3} 100%)`;
+}
+
+function applyBrandIdentity(brand) {
+  const id = BRAND_IDENTITY[brand] || BRAND_IDENTITY.all;
+  // Hero word — replace classes that affect font-family/case while keeping size + metal effect
+  const hero = document.getElementById('heroWord');
+  if (hero) {
+    hero.textContent = id.hero;
+    hero.className = `${id.heroFont} text-7xl md:text-8xl font-normal metal tracking-[.01em] leading-none`;
+  }
+  const sub = document.getElementById('heroSub');
+  if (sub) sub.textContent = id.sub;
+  const mono = document.getElementById('heroMono');
+  if (mono) mono.textContent = id.mono;
+  // Topbar
+  const tb = document.getElementById('topbarThai');
+  if (tb) tb.textContent = id.topbarThai;
+  const te = document.getElementById('topbarEn');
+  if (te) te.textContent = id.topbarEn;
+  const tm = document.getElementById('topbarMono');
+  if (tm) tm.textContent = id.mono;
 }
 
 function selectBrand(brand) {
@@ -1159,6 +1207,7 @@ function selectBrand(brand) {
     b.classList.toggle('active', b.dataset.brand === brand);
   });
   applyBrandTheme(brand);
+  applyBrandIdentity(brand);
   refetchAllOpenSections();
 }
 
