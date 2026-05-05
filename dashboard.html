@@ -1382,7 +1382,13 @@ function deltaHTML(curr, prev, invert=false) {
 }
 async function fetchTrend() {
   try {
-    const j = await apiGet('/api/yiaoya/summary');
+    // Look back 6 calendar months so the chart shows real month-over-month trend
+    // (default endpoint behaviour returns month-to-date only)
+    const today = new Date(Date.now() + 7*3600000);
+    const start = new Date(today.getFullYear(), today.getMonth() - 5, 1);
+    const sinceISO = `${start.getFullYear()}-${String(start.getMonth()+1).padStart(2,'0')}-01`;
+    const untilISO = isoToday();
+    const j = await apiGet(`/api/yiaoya/summary?since=${sinceISO}&until=${untilISO}`);
     setLive('tr', true);
     const months = aggregateByMonth(j.days);
     renderMonthCards(months);
